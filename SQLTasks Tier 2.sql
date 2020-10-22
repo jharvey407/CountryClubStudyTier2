@@ -131,9 +131,32 @@ ORDER BY revenue;
 
 /* Q11: Produce a report of members and who recommended them in alphabetic surname,firstname order */
 
+SELECT a.surname||', '||a.firstname AS Member, b.firstname||' '||b.surname AS 'Rec By'
+FROM Members AS a
+JOIN Members AS b
+ON (a.recommendedby = b.memid AND b.memid != 0 AND a.recommendedby IS NOT NULL)
+ORDER BY a.surname
 
 /* Q12: Find the facilities with their usage by member, but not guests */
 
+SELECT f.name AS Name, CONCAT(m.firstname,' ', m.surname) AS Member, count(f.name) AS Used
+FROM Facilities AS f
+JOIN Bookings AS b ON b.facid = f.facid
+JOIN Members AS m ON b.memid = m.memid
+WHERE b.memid != 0
+GROUP BY m.surname, f.name
+ORDER BY f.name, m.surname;
 
 /* Q13: Find the facilities usage by month, but not guests */
+
+
+SELECT f.name as Name, strftime('%m', b.starttime) as Month, COUNT(f.name) AS Used
+FROM Bookings AS b
+JOIN Facilities AS f ON b.facid = f.facid
+GROUP BY f.name, strftime('%m', b.starttime);
+
+
+
+
+
 
